@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Login | FUTURE WEAR{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-5 col-lg-4">
+            
+            <h1 class="text-center mb-5" style="letter-spacing: 5px; font-weight: 300;">LOGIN</h1>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-danger p-2 text-center" style="border-radius: 0; font-size: 11px;">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label class="form-label" style="font-size: 10px; color: #555;">USUÁRIO</label>
+                    <input type="text" name="username" class="form-control" required>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label" style="font-size: 10px; color: #555;">SENHA</label>
+                    <input type="password" name="password" class="form-control" required>
+                </div>
+
+                <button type="submit" class="btn btn-custom">ENTRAR</button>
+            </form>
+
+            <p class="text-center mt-4" style="font-size: 10px; color: #555;">
+                NÃO TEM CONTA? <a href="{% url 'cadastro' %}" style="color: #fff;">CADASTRE-SE</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}FUTURE WEAR{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-5">
+    <div class="row g-4"> <!-- g-4 = espaço entre os cards -->
+        {% for produto in produtos %}
+        <div class="col-6 col-md-4 col-lg-2"> <!-- 6 no celular, 4 no tablet, 2 no desktop -->
+            <a href="{% url 'detalhe_produto' produto.id %}" class="text-decoration-none">
+                <div class="text-center">
+                    {% if produto.imagem %}
+                        <img src="{{ produto.imagem }}" alt="{{ produto.nome }}" style="width:100%; height:auto;">
+                    {% else %}
+                        <div style="height:250px; background:#1a1a1a;" class="mb-3 d-flex align-items-center justify-content-center">
+                            <span style="color:#333; font-size:10px;">SEM IMAGEM</span>
+                        </div>
+                    {% endif %}
+                    <h3 style="font-size: 11px; color: #888; margin-bottom: 5px;">{{ produto.nome }}</h3>
+                    <p style="font-size: 11px; color: #fff;">R$ {{ produto.preco }}</p>
+                </div>
+            </a>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <p style="color: #555;">NENHUM PRODUTO CADASTRADO.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

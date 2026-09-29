@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Cadastro | FUTURE WEAR{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <!-- Coluna mais estreita e centralizada -->
+        <div class="col-12 col-sm-8 col-md-6 col-lg-4">
+            
+            <h1 class="text-center mb-5" style="letter-spacing: 5px; font-weight: 300; font-size: 1.5rem;">
+                CRIAR CONTA
+            </h1>
+
+            <form method="POST">
+                {% csrf_token %}
+                
+                {% for field in form %}
+                <div class="mb-4 text-start">
+                    <label class="form-label d-block mb-2" style="font-size: 10px; color: #666; letter-spacing: 2px;">
+                        {{ field.label|upper }}
+                    </label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <p class="text-danger mt-1" style="font-size: 10px;">{{ field.errors.0 }}</p>
+                    {% endif %}
+                    {% if field.help_text %}
+                        <p class="mt-1" style="font-size: 9px; color: #444; text-transform: none;">{{ field.help_text }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+                <button type="submit" class="btn btn-custom w-100 mt-2">CADASTRAR</button>
+            </form>
+
+            <p class="text-center mt-4" style="font-size: 10px; color: #555;">
+                JÁ TEM CONTA? <a href="{% url 'login' %}" style="color: #fff; text-decoration: underline;">FAÇA LOGIN</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
