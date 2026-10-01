@@ -11,11 +11,18 @@
             <a href="{% url 'detalhe_produto' produto.id %}" class="text-decoration-none">
                 <div class="text-center">
                     {% if produto.imagem %}
-                        <img src="{{ produto.imagem }}" alt="{{ produto.nome }}" style="width:100%; height:auto;">
+                    {% if produto.imagem %}
+                    <img src="{% static produto.imagem %}" alt="{{ produto.nome }}" style="width:100%; height:auto;">
                     {% else %}
-                        <div style="height:250px; background:#1a1a1a;" class="mb-3 d-flex align-items-center justify-content-center">
-                            <span style="color:#333; font-size:10px;">SEM IMAGEM</span>
-                        </div>
+                    <div style="height:250px; background:#1a1a1a;"
+                        class="mb-3 d-flex align-items-center justify-content-center">
+                        <span style="color:#333; font-size:10px;">SEM IMAGEM</span>
+                    </div>
+                    {% endif %}
+                    <div style="height:250px; background:#1a1a1a;"
+                        class="mb-3 d-flex align-items-center justify-content-center">
+                        <span style="color:#333; font-size:10px;">SEM IMAGEM</span>
+                    </div>
                     {% endif %}
                     <h3 style="font-size: 11px; color: #888; margin-bottom: 5px;">{{ produto.nome }}</h3>
                     <p style="font-size: 11px; color: #fff;">R$ {{ produto.preco }}</p>
