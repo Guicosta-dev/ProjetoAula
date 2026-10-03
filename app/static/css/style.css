@@ -100,20 +100,45 @@ a { color: inherit; }
 /* ===== Home: grid de produtos ===== */
 .produto-card { display: block; text-align: center; color: #fff; text-decoration: none; }
 .produto-card:hover { color: #fff; }
+
 .produto-img {
     width: 100%;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 3 / 4;
     object-fit: contain;
     display: block;
-    padding: 12px;
-    background: #141414;
-    transition: transform .3s;
+    padding: 0;
+    transition: transform .4s ease, filter .4s ease;
 }
-.produto-card:hover .produto-img { transform: scale(1.03); }
-.produto-sem-imagem { display: flex; align-items: center; justify-content: center; }
+/* brilho suave no contorno da peça (ajuda peças pretas; apague se não quiser) */
+img.produto-img,
+.imagem-detalhe img {
+    filter: drop-shadow(0 0 18px rgba(255, 255, 255, 0.10));
+}
+
+.produto-sem-imagem {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #222;
+}
 .produto-sem-imagem span { color: #444; font-size: 10px; }
+
 .produto-nome { margin: 22px 0 4px; font-size: 13px; font-weight: 400; letter-spacing: 1px; }
 .produto-preco { margin: 0; color: #777; font-size: 12px; }
+.produto-nome,
+.produto-preco { transition: transform .4s ease; }
+
+/* hover: o produto sobe, cresce e ganha brilho (só onde existe mouse) */
+@media (hover: hover) {
+    .produto-card:hover .produto-img {
+        transform: translateY(-12px) scale(1.06);
+        filter: drop-shadow(0 20px 22px rgba(255, 255, 255, 0.14));
+    }
+    .produto-card:hover .produto-nome,
+    .produto-card:hover .produto-preco {
+        transform: translateY(-8px);
+    }
+}
 
 /* ===== Detalhe do produto ===== */
 .container-detalhe {
@@ -125,7 +150,7 @@ a { color: inherit; }
     margin: 0 auto;
     padding: 0 20px;
 }
-.imagem-detalhe { flex: 1 1 400px; background: #141414; }
+.imagem-detalhe { flex: 1 1 400px; }
 .imagem-detalhe img { width: 100%; display: block; }
 .info-detalhe { flex: 1 1 300px; max-width: 420px; }
 .info-detalhe h1 { font-size: 22px; font-weight: 400; letter-spacing: 4px; margin-bottom: 10px; }
@@ -186,7 +211,7 @@ a { color: inherit; }
     padding: 20px 0;
     border-bottom: 1px solid #1a1a1a;
 }
-.carrinho-img { width: 80px; aspect-ratio: 3 / 4; object-fit: contain; background: #141414; }
+.carrinho-img { width: 80px; aspect-ratio: 3 / 4; object-fit: contain; }
 
 /* ===== Painel (tabela) ===== */
 .table { --bs-table-border-color: #1a1a1a !important; }

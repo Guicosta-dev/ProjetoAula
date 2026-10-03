@@ -3,25 +3,23 @@
 {% block title %}FUTURE WEAR{% endblock %}
 
 {% block content %}
-<div class="container-fluid px-5">
-    <div class="row g-4">
+<div class="container-fluid px-4">
+    <div class="row g-4 gy-5">
         {% for produto in produtos %}
         <div class="col-6 col-md-4 col-lg-2">
-            <a href="{% url 'detalhe_produto' produto.id %}" class="text-decoration-none">
-                <div class="text-center">
-                    {% if produto.imagem %}
-                        <img src="{{ produto.imagem }}" alt="{{ produto.nome }}" class="produto-img mb-3">
-                    {% else %}
-                        <div class="produto-img produto-sem-imagem mb-3"><span>SEM IMAGEM</span></div>
-                    {% endif %}
-                    <h3 style="font-size: 11px; color: #888; margin-bottom: 5px;">{{ produto.nome }}</h3>
-                    <p style="font-size: 11px; color: #fff;">R$ {{ produto.preco }}</p>
-                </div>
+            <a href="{% url 'detalhe_produto' produto.id %}" class="produto-card">
+                {% if produto.imagem %}
+                    <img src="{{ produto.imagem }}" alt="{{ produto.nome }}" class="produto-img">
+                {% else %}
+                    <div class="produto-img produto-sem-imagem"><span>SEM IMAGEM</span></div>
+                {% endif %}
+                <h3 class="produto-nome">{{ produto.nome }}</h3>
+                <p class="produto-preco">R$ {{ produto.preco }}</p>
             </a>
         </div>
         {% empty %}
         <div class="col-12 text-center py-5">
-            <p style="color: #555;">NENHUM PRODUTO CADASTRADO.</p>
+            <p class="text-secondary">NENHUM PRODUTO CADASTRADO.</p>
         </div>
         {% endfor %}
     </div>
