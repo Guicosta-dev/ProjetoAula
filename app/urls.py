@@ -14,4 +14,9 @@ urlpatterns = [
     path('painel/adicionar/', views.painel_adicionar, name='painel_adicionar'),
     path('painel/editar/<int:id>/', views.painel_editar, name='painel_editar'),
     path('painel/deletar/<int:id>/', views.painel_deletar, name='painel_deletar'),
+
+    #Carrinho
+    path('carrinho/', views.carrinho, name='carrinho'),
+    path('carrinho/adicionar/<int:id>/', views.adicionar_carrinho, name='adicionar_carrinho'),
+    path('carrinho/remover/<int:id>/', views.remover_carrinho, name='remover_carrinho'),
 ]

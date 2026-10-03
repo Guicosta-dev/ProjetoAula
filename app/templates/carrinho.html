@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}Carrinho | FUTURE WEAR{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 800px;">
+    <h1 class="text-center mb-5" style="letter-spacing: 5px; font-weight: 300; font-size: 1.5rem;">CARRINHO</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-danger p-2 text-center" style="border-radius: 0; font-size: 11px;">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    {% for item in itens %}
+    <div class="item-carrinho">
+        {% if item.produto.imagem %}
+            <img src="{{ item.produto.imagem }}" alt="{{ item.produto.nome }}" class="carrinho-img">
+        {% else %}
+            <div class="carrinho-img produto-sem-imagem"></div>
+        {% endif %}
+
+        <div class="flex-grow-1">
+            <a href="{% url 'detalhe_produto' item.produto.id %}" class="text-white text-decoration-none">{{ item.produto.nome }}</a>
+            <p class="mb-0" style="color: #666; font-size: 10px;">
+                QTD: {{ item.quantidade }} &nbsp;|&nbsp; R$ {{ item.produto.preco }} CADA
+            </p>
+        </div>
+
+        <div class="text-end">
+            <p class="mb-2">R$ {{ item.subtotal }}</p>
+            <form method="post" action="{% url 'remover_carrinho' item.produto.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-link p-0 text-danger" style="font-size: 10px;">REMOVER</button>
+            </form>
+        </div>
+    </div>
+    {% empty %}
+    <p class="text-center py-5" style="color: #555;">SEU CARRINHO ESTÁ VAZIO.</p>
+    {% endfor %}
+
+    {% if itens %}
+    <div class="d-flex justify-content-between mt-4 pt-4" style="border-top: 1px solid #222;">
+        <span>TOTAL</span>
+        <span>R$ {{ total }}</span>
+    </div>
+    {% endif %}
+
+    <p class="text-center mt-5">
+        <a href="{% url 'home' %}" style="color: #888;">← CONTINUAR COMPRANDO</a>
+    </p>
+</div>
+{% endblock %}

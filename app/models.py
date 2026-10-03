@@ -10,6 +10,9 @@ class Produto(models.Model):
     categoria = models.CharField(max_length=50, blank=True, null=True)
     cor = models.CharField(max_length=30, blank=True, null=True)
     tamanho = models.CharField(max_length=10, blank=True, null=True)
+
+    GENEROS = [('male', 'Male'), ('female', 'Female')]
+    genero = models.CharField(max_length=10, choices=GENEROS, default='male')
     
     # MUDANÇA AQUI: de ImageField para URLField
     imagem = models.URLField(max_length=500, blank=True, null=True)

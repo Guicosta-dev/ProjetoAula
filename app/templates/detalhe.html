@@ -1,55 +1,37 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ produto.nome }} | FUTURE WEAR</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body>
+{% extends 'base.html' %}
 
-    <header>
-        <div class="logo"><a href="{% url 'home' %}" style="color:inherit; text-decoration:none;">FUTURE//WEAR</a></div>
-        <nav>
-            <a href="#">MALE</a>
-            <a href="#">FEMALE</a>
-            
-            {% if user.is_authenticated %}
-                <span style="color: #555; margin-left: 20px;">OLÁ, {{ user.username|upper }}</span>
-                <a href="{% url 'logout' %}" style="color: #ff3333;">SAIR</a>
-            {% else %}
-                <a href="{% url 'login' %}">LOGIN</a>
-                <a href="{% url 'cadastro' %}">CADASTRO</a>
-            {% endif %}
-            
-            <a href="#">CARRINHO (0)</a>
-        </nav>
-    </header>
+{% block title %}{{ produto.nome }} | FUTURE WEAR{% endblock %}
 
-    <main class="container-detalhe">
-        <div class="imagem-detalhe">
-            {% if produto.imagem %}
-                <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">
-            {% else %}
-                <div style="height:500px; background:#1a1a1a;"></div>
-            {% endif %}
+{% block content %}
+<main class="container-detalhe">
+    <div class="imagem-detalhe">
+        {% if produto.imagem %}
+            <img src="{{ produto.imagem }}" alt="{{ produto.nome }}">
+        {% else %}
+            <div class="produto-img produto-sem-imagem"><span>SEM IMAGEM</span></div>
+        {% endif %}
+    </div>
+
+    <div class="info-detalhe">
+        <h1>{{ produto.nome }}</h1>
+        <p class="categoria">
+            {{ produto.categoria|default:"-" }} / {{ produto.cor|default:"-" }} / {{ produto.tamanho|default:"-" }}
+        </p>
+        <p class="preco-detalhe">R$ {{ produto.preco }}</p>
+
+        <div class="descricao-completa">
+            <p>{{ produto.descricao }}</p>
         </div>
 
-        <div class="info-detalhe">
-            <h1>{{ produto.nome }}</h1>
-            <p class="categoria">{{ produto.categoria }} / {{ produto.cor }} / {{ produto.tamanho }}</p>
-            <p class="preco-detalhe">R$ {{ produto.preco }}</p>
-            
-            <div class="descricao-completa">
-                <p>{{ produto.descricao }}</p>
-            </div>
-
-            <p class="estoque">ESTOQUE: {{ produto.estoque }} UNIDADES</p>
-
-            <button class="btn-comprar-grande">ADICIONAR AO CARRINHO</button>
-        </div>
-    </main>
-
-</body>
-</html>
+        <p class="estoque">ESTOQUE: {{ produto.estoque }} UNIDADES</p>
+        {% if produto.estoque > 0 %}
+            <form method="post" action="{% url 'adicionar_carrinho' produto.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-comprar-grande">ADICIONAR AO CARRINHO</button>
+            </form>
+        {% else %}
+            <button type="button" class="btn-comprar-grande" disabled style="opacity: .4;">ESGOTADO</button>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}

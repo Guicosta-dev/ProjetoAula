@@ -2,12 +2,17 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
+from decimal import Decimal
+from django.views.decorators.http import require_POST
 from .models import Produto
 
 # --- VIEWS DA LOJA ---
 
 def home(request):
     produtos = Produto.objects.all().order_by('-criado_em')
+    genero = request.GET.get('genero')
+    if genero in ('male', 'female'):
+        produtos = produtos.filter(genero=genero)
     return render(request, 'home.html', {'produtos': produtos})
 
 def detalhe_produto(request, id):
@@ -29,21 +34,16 @@ def login_view(request):
     return render(request, 'login.html')
 
 def cadastro_view(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('home')
-    else:
-        form = UserCreationForm()
-        # --- ADICIONE ESTE BLOCO ---
-        # Aplica a classe do Bootstrap em todos os campos automaticamente
-        for field in form.fields.values():
-            field.widget.attrs['class'] = 'form-control'
-            field.widget.attrs['placeholder'] = ' '
-        # ---------------------------
-    
+    form = UserCreationForm(request.POST or None)
+    if request.method == 'POST' and form.is_valid():
+        user = form.save()
+        login(request, user)
+        return redirect('home')
+
+    for field in form.fields.values():
+        field.widget.attrs['class'] = 'form-control'
+        field.widget.attrs['placeholder'] = ' '
+
     return render(request, 'cadastro.html', {'form': form})
 
 def logout_view(request):
@@ -56,7 +56,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 # --- PAINEL DO ADMINISTRADOR ---
 
-@staff_member_required
+@staff_member_required(login_url='login')
 def painel(request):
     produtos = Produto.objects.all().order_by('-criado_em')
     return render(request, 'painel/painel.html', {'produtos': produtos})
@@ -91,3 +91,37 @@ def painel_deletar(request, id):
         produto.delete()
         return redirect('painel')
     return render(request, 'painel/confirmar_delete.html', {'produto': produto})
+
+# --- CARRINHO ---
+
+def carrinho(request):
+    dados = request.session.get('carrinho', {})
+    itens = []
+    total = Decimal('0')
+    for produto in Produto.objects.filter(id__in=dados.keys()):
+        quantidade = dados[str(produto.id)]
+        subtotal = produto.preco * quantidade
+        total += subtotal
+        itens.append({'produto': produto, 'quantidade': quantidade, 'subtotal': subtotal})
+    return render(request, 'carrinho.html', {'itens': itens, 'total': total})
+
+@require_POST
+def adicionar_carrinho(request, id):
+    produto = get_object_or_404(Produto, id=id)
+    carrinho = request.session.get('carrinho', {})
+    chave = str(produto.id)
+    quantidade = carrinho.get(chave, 0)
+
+    if quantidade < produto.estoque:
+        carrinho[chave] = quantidade + 1
+        request.session['carrinho'] = carrinho
+    else:
+        messages.error(request, f'Estoque máximo de {produto.nome} atingido.')
+    return redirect('carrinho')
+
+@require_POST
+def remover_carrinho(request, id):
+    carrinho = request.session.get('carrinho', {})
+    carrinho.pop(str(id), None)
+    request.session['carrinho'] = carrinho
+    return redirect('carrinho')
