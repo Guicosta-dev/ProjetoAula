@@ -16,43 +16,34 @@
 <body>
 
     <header class="topo">
-        <button class="btn-menu" type="button" data-bs-toggle="offcanvas" data-bs-target="#menu" aria-label="Menu">+</button>
+        <a href="{% url 'home' %}" class="marca">FUTURE//WEAR</a>
 
         <nav class="nav-centro">
             <a href="{% url 'home' %}?genero=male" class="{% if request.GET.genero == 'male' %}ativo{% endif %}">MALE</a>
             <a href="{% url 'home' %}?genero=female" class="{% if request.GET.genero == 'female' %}ativo{% endif %}">FEMALE</a>
         </nav>
 
-        <a href="{% url 'carrinho' %}" class="btn-carrinho" aria-label="Carrinho">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">
-                <path d="M6 8h12l1 13H5L6 8z"/>
-                <path d="M9 8V6a3 3 0 0 1 6 0v2"/>
-            </svg>
-            {% if carrinho_qtd %}<span class="carrinho-qtd">{{ carrinho_qtd }}</span>{% endif %}
-        </a>
-    </header>
-
-    <div class="offcanvas offcanvas-start" tabindex="-1" id="menu">
-        <div class="offcanvas-header">
-            <a href="{% url 'home' %}" class="menu-marca">FUTURE//WEAR</a>
-            <button type="button" class="btn-menu" data-bs-dismiss="offcanvas" aria-label="Fechar">✕</button>
-        </div>
-        <div class="offcanvas-body">
-            <ul class="menu-lista">
-                <li><a href="{% url 'home' %}">HOME</a></li>
-                {% if user.is_authenticated %}
-                    {% if user.is_staff %}
-                        <li><a href="{% url 'painel' %}">PAINEL</a></li>
-                    {% endif %}
-                    <li class="menu-usuario">OLÁ, {{ user.username|upper }}</li>
-                    <li><a href="{% url 'logout' %}">SAIR</a></li>
-                {% else %}
-                    <li><a href="{% url 'login' %}">LOGIN</a></li>
-                    <li><a href="{% url 'cadastro' %}">CADASTRO</a></li>
+        <nav class="nav-direita">
+            {% if user.is_authenticated %}
+                {% if user.is_staff %}
+                    <a href="{% url 'painel' %}">PAINEL</a>
                 {% endif %}
-            </ul>
-        </div>
-    </div>
+                <span class="nav-usuario">OLÁ, {{ user.username|upper }}</span>
+                <a href="{% url 'logout' %}">SAIR</a>
+            {% else %}
+                <a href="{% url 'login' %}">LOGIN</a>
+                <a href="{% url 'cadastro' %}">CADASTRO</a>
+            {% endif %}
+
+            <a href="{% url 'carrinho' %}" class="btn-carrinho" aria-label="Carrinho">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">
+                    <path d="M6 8h12l1 13H5L6 8z"/>
+                    <path d="M9 8V6a3 3 0 0 1 6 0v2"/>
+                </svg>
+                {% if carrinho_qtd %}<span class="carrinho-qtd">{{ carrinho_qtd }}</span>{% endif %}
+            </a>
+        </nav>
+    </header>
 
     <main class="conteudo">
         {% block content %}
