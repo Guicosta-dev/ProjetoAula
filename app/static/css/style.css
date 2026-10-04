@@ -13,46 +13,55 @@ a { color: inherit; }
 .conteudo { padding-top: 96px; padding-bottom: 80px; }
 
 /* ===== Header (opções direto no navbar) ===== */
+/* ===== Header (opções direto no navbar) ===== */
 .topo {
     position: fixed;
     top: 0; left: 0; right: 0;
-    min-height: 64px;
+    height: 64px;
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    padding: 0 24px;
+    padding: 0 32px;
     background: #0a0a0a;
     z-index: 1030;
 }
-.topo a { color: #fff; text-decoration: none; }
-.topo a:hover { text-decoration: underline; text-underline-offset: 5px; }
 
-.marca { justify-self: start; letter-spacing: 3px; font-weight: 500; }
+/* tudo no header com o mesmo tamanho, sem sublinhado e centralizado na vertical */
+.topo a,
+.topo span {
+    display: inline-flex;
+    align-items: center;
+    height: 24px;
+    font-size: 12px;
+    line-height: 1;
+    letter-spacing: 1px;
+    color: #fff;
+    text-decoration: none;
+}
+.topo a:hover { text-decoration: underline; text-underline-offset: 6px; }
 
-.nav-centro { display: flex; gap: 20px; }
+.topo .marca { justify-self: start; letter-spacing: 3px; font-weight: 500; }
+
+.nav-centro { display: flex; align-items: center; gap: 28px; }
 .nav-centro:has(.ativo) a:not(.ativo) { color: #555; }
 .nav-centro a:hover { color: #fff !important; }
 
-.nav-direita {
-    justify-self: end;
-    display: flex;
-    align-items: center;
-    gap: 22px;
-}
-.nav-usuario { color: #777; }
-.btn-carrinho { display: inline-flex; align-items: center; gap: 6px; }
-.carrinho-qtd { font-size: 11px; }
+.nav-direita { justify-self: end; display: flex; align-items: center; gap: 28px; }
+.topo .nav-usuario { color: #777; }
+.btn-carrinho { gap: 6px; }
+.topo .carrinho-qtd { font-size: 11px; }
 
 /* celular: as três partes empilham em vez de ficarem escondidas */
 @media (max-width: 767px) {
     .topo {
+        height: auto;
         grid-template-columns: 1fr;
         justify-items: center;
-        row-gap: 10px;
+        row-gap: 12px;
         padding: 14px 16px;
     }
-    .marca, .nav-direita { justify-self: center; }
-    .nav-direita { flex-wrap: wrap; justify-content: center; gap: 10px 18px; }
+    .topo .marca, .nav-direita { justify-self: center; }
+    .nav-direita { flex-wrap: wrap; justify-content: center; gap: 10px 20px; }
     .conteudo { padding-top: 150px; }
 }
 
