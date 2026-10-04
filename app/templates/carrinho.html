@@ -14,8 +14,8 @@
 
     {% for item in itens %}
     <div class="item-carrinho">
-        {% if item.produto.imagem %}
-            <img src="{{ item.produto.imagem }}" alt="{{ item.produto.nome }}" class="carrinho-img">
+        {% if item.produto.imagem_url %}
+            <img src="{{ item.produto.imagem_url }}" alt="{{ item.produto.nome }}" class="carrinho-img">
         {% else %}
             <div class="carrinho-img produto-sem-imagem"></div>
         {% endif %}

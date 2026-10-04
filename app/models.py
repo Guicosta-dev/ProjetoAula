@@ -15,9 +15,16 @@ class Produto(models.Model):
     genero = models.CharField(max_length=10, choices=GENEROS, default='male')
     
     # MUDANÇA AQUI: de ImageField para URLField
-    imagem = models.URLField(max_length=500, blank=True, null=True)
+    imagem = models.URLField(max_length=500, blank=True, null=True, verbose_name='Imagem (link)')
+    foto = models.ImageField(upload_to='produtos/', blank=True, null=True, verbose_name='Foto (enviar arquivo)')
     
     criado_em = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.nome
+    
+    @property
+    def imagem_url(self):
+        if self.foto:
+            return self.foto.url
+        return self.imagem or ''

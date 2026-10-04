@@ -8,8 +8,8 @@
         {% for produto in produtos %}
         <div class="col-6 col-md-4 col-lg-2">
             <a href="{% url 'detalhe_produto' produto.id %}" class="produto-card">
-                {% if produto.imagem %}
-                    <img src="{{ produto.imagem }}" alt="{{ produto.nome }}" class="produto-img">
+                {% if produto.imagem_url %}
+                    <img src="{{ produto.imagem_url }}" alt="{{ produto.nome }}"  class="produto-img">
                 {% else %}
                     <div class="produto-img produto-sem-imagem"><span>SEM IMAGEM</span></div>
                 {% endif %}
