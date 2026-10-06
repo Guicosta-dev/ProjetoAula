@@ -5,6 +5,8 @@ from django.contrib import messages
 from decimal import Decimal
 from django.views.decorators.http import require_POST
 from .models import Produto
+from .forms import CadastroComEmailForm  # Importando o novo formulário que criamos
+import requests
 
 # --- VIEWS DA LOJA ---
 
@@ -34,17 +36,51 @@ def login_view(request):
     return render(request, 'login.html')
 
 def cadastro_view(request):
-    form = UserCreationForm(request.POST or None)
-    if request.method == 'POST' and form.is_valid():
-        user = form.save()
-        login(request, user)
-        return redirect('home')
+    # Se o usuário já estiver logado, não precisa ver a tela de cadastro
+    if request.user.is_authenticated:
+        return redirect('produtos')
 
-    for field in form.fields.values():
-        field.widget.attrs['class'] = 'form-control'
-        field.widget.attrs['placeholder'] = ' '
+    if request.method == 'POST':
+        # Usamos o novo formulário que exige o e-mail
+        form = CadastroComEmailForm(request.POST)
+        
+        if form.is_valid():
+            # 1. Salva o usuário no banco de dados
+            user = form.save()
+            
+            # --- INTEGRAÇÃO EMAILJS ---
+            emailjs_url = 'https://api.emailjs.com/api/v1.0/email/send'
+            
+            # Monta o pacote de dados para a API
+            payload = {
+                'service_id': 'service_50i1ldn',     # Ex: service_xxxxx
+                'template_id': 'template_022y90h',   # Ex: template_xxxxx
+                'user_id': 'Q01y5dVMASTopDWLT',        # Ex: abcdef123456
+                'accessToken': 'Dcujf8LbNFJtooiXayMjK',   # A chave secreta do painel
+                'template_params': {
+                    'nome_usuario': user.username,
+                    'email_destino': user.email     # Agora temos a garantia de que o e-mail existe!
+                }
+            }
+            
+            # Tenta fazer o disparo sem travar o sistema do aluno caso a internet caia
+            try:
+                resposta = requests.post(emailjs_url, json=payload)
+                if resposta.status_code != 200:
+                    print(f"Erro EmailJS: {resposta.text}")
+            except Exception as e:
+                print(f"Erro de conexão com EmailJS: {e}")
+            # --------------------------
+
+            # 2. Faz o login automático e redireciona para a loja
+            login(request, user)
+            return redirect('produtos')
+    else:
+        # Se for GET, exibe o formulário vazio
+        form = CadastroComEmailForm()
 
     return render(request, 'cadastro.html', {'form': form})
+
 
 def logout_view(request):
     logout(request)
